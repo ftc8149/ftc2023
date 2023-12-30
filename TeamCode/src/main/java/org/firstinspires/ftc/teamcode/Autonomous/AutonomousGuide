@@ -1,0 +1,34 @@
+
+All autonomous programs are divided between the blue side and red side, please keep them in their
+respective places.
+
+Each program's name should be straightforward and please keep the name of the program and the name
+of program on the driver hub the same for ease of use during competitions.
+
+If you are using my custom made position tracking and dead wheel based position controller,
+please import "FinalOdometry" into your code.
+
+ODOMETRY CODE:
+To use the Odometry code, all you need to insert is:
+goToPosition(changeX, changeY, targetAngle, speed, angularSpeed, positionTolerance, angleTolerance);
+
+**YOU CANNOT MAKE changeX, changeY, positionTolerance, or angleTolerance 0**
+
+-Recommendations-
+    - If you do not want to change one of the axis (ex. changeX = 20, changeY = 0), this will not
+    work, however you can make changeY a small number (0.1 - 1 works best) there is always a natural
+    drift in the robot so it will compensate for 0.
+
+    - Make the angularSpeed a little higher than your linear speed. (ex. speed = 0.2,
+    ... angularSpeed = 0.25 - 0.4) this will determine how fast your robot rotates, I recommend that
+    for lower linear speeds (0.1 - 0.2) doubling the angular speed will help.
+
+    - If you are not turning, keep your angularSpeed as 0. This is not required, the robot will
+    still operate, however your robot will shake left and right vigorously which may result in a
+    failed autonomous. (I have not seen this happen yet though so I do not know but this could
+    happen).
+
+    - Putting a sleep(milliseconds) after reaching your target position is highly recommended, this
+    will give the robot enough time to settle and stop moving. (This doesn't have to been a long
+    time, about 250 - 500 milliseconds is enough).
+

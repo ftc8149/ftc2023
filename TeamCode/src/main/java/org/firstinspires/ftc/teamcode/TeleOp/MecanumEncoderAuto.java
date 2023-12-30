@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="Mecanum: Encoder Auto", group="Robot")
+@Autonomous(name="Encoder Auto", group="Robot")
 @Disabled
 public class MecanumEncoderAuto extends LinearOpMode {
 
@@ -47,19 +47,25 @@ public class MecanumEncoderAuto extends LinearOpMode {
         RR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         RL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        telemetry.addData("Front starting at", "%7d :%7d",
+        //telemetry.addData("Front starting at", "%7d :%7d",
+                //FL.getCurrentPosition(),
+                //FR.getCurrentPosition());
+       // telemetry.addData("Back starting at", "%7d :%7d",
+                //RR.getCurrentPosition(),
+                //.getCurrentPosition());
+
+        telemetry.addData("Starting at", "7%d :7%d :7%d :7%d",
                 FL.getCurrentPosition(),
-                FR.getCurrentPosition());
-        telemetry.addData("Back starting at", "%7d :%7d",
-                RR.getCurrentPosition(),
-                RL.getCurrentPosition());
+                FR.getCurrentPosition(),
+                RL.getCurrentPosition(),
+                RR.getCurrentPosition());
         telemetry.update();
 
         waitForStart();
 
-        encoderDrive(DRIVE_SPEED, 48, 48, 5.0);
-        encoderDrive(TURN_SPEED, 12, -12, 4.0);
-        encoderDrive(DRIVE_SPEED, -24, -24, 4.0);
+        encoderDrive(DRIVE_SPEED, 48, 48, 48,48,5.0);
+        encoderDrive(TURN_SPEED, 12, -12, 12,-12,4.0);
+        encoderDrive(DRIVE_SPEED, -24, -24, -24,-24,4.0);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -69,19 +75,24 @@ public class MecanumEncoderAuto extends LinearOpMode {
     }
 
     public void encoderDrive(double speed,
-                             double leftInches, double rightInches,
+                             double frontLeftInches, double frontRightInches,
+                             double rearLeftInches, double rearRightInches,
                              double timeoutS) {
-        int newLeftTarget;
-        int newRightTarget;
+        int newFrontLeftTarget;
+        int newFrontRightTarget;
+        int newRearLeftTarget;
+        int newRearRightTarget;
 
         if (opModeIsActive()) {
 
-            newLeftTarget = FL.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
-            newRightTarget = FR.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
-            FL.setTargetPosition(newLeftTarget);
-            FR.setTargetPosition(newRightTarget);
-            RR.setTargetPosition(newRightTarget);
-            RL.setTargetPosition(newLeftTarget);
+            newFrontLeftTarget = FL.getCurrentPosition() + (int) (frontLeftInches * COUNTS_PER_INCH);
+            newFrontRightTarget = FR.getCurrentPosition() + (int) (frontRightInches * COUNTS_PER_INCH);
+            newRearLeftTarget = RL.getCurrentPosition() + (int) (rearLeftInches * COUNTS_PER_INCH);
+            newRearRightTarget = RR.getCurrentPosition() + (int) (rearRightInches * COUNTS_PER_INCH);
+            FL.setTargetPosition(newFrontLeftTarget);
+            FR.setTargetPosition(newFrontRightTarget);
+            RR.setTargetPosition(newRearRightTarget);
+            RL.setTargetPosition(newRearLeftTarget);
 
             FL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             FR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -97,7 +108,12 @@ public class MecanumEncoderAuto extends LinearOpMode {
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
                     (FL.isBusy() && FR.isBusy() && RR.isBusy() && RL.isBusy())) {
-                telemetry.addData("Running to", "%7d :%7d", newLeftTarget, newRightTarget);
+                //telemetry.addData("Running to", "%7d :%7d", newLeftTarget, newRightTarget);
+                //telemetry.addData("Running to", "%7d :%7d :%7d :%7d", newFrontLeftTarget, newFrontRightTarget, newRearLeftTarget, newRearRightTarget);
+                telemetry.addData("FL Running to", newFrontLeftTarget);
+                telemetry.addData("FR Running to", newFrontRightTarget);
+                telemetry.addData("RL Running to", newRearLeftTarget);
+                telemetry.addData("RR Running to", newRearRightTarget);
                 telemetry.addData("Front currently at", "%7d :%7d",
                         FL.getCurrentPosition(), FR.getCurrentPosition());
                 telemetry.addData("Back currently at", "%7d :%7d",
